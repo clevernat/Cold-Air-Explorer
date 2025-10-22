@@ -1,0 +1,5 @@
+{
+  "name": "Cold Air Explorer",
+  "description": "A web application that visualizes simulated Cold Air Outbreaks over North America using generative AI. It displays interactive maps and a dashboard with trends for generated weather events.",
+  "requestFramePermissions": []
+}
