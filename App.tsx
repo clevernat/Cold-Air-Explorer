@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { generateOutbreakData, generateForecastData } from './services/geminiService';
 import type { OutbreakData } from './types';
-import NorthAmericaMap from './components/NorthAmericaMap';
+import WorldMap from './components/WorldMap';
 import Dashboard from './components/Dashboard';
 import { SnowflakeIcon, LoadingSpinner } from './components/icons';
 
@@ -14,7 +14,7 @@ const App: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [mode, setMode] = useState<Mode>('simulation');
   const [forecastDate, setForecastDate] = useState<string>(new Date().toISOString().split('T')[0]);
-  const [forecastLocation, setForecastLocation] = useState<string>('Chicago, IL');
+  const [forecastLocation, setForecastLocation] = useState<string>('Moscow, Russia');
   const [activeLayer, setActiveLayer] = useState<Layer>('temperature');
 
   const handleGenerateData = useCallback(async () => {
@@ -48,8 +48,20 @@ const App: React.FC = () => {
           </div>
           <div className="flex items-center flex-wrap gap-2">
              <div className="bg-gray-700 p-1 rounded-lg flex">
-                <button onClick={() => setMode('simulation')} className={`px-3 py-1 text-sm font-medium rounded-md ${mode === 'simulation' ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-600'}`}>Simulation</button>
-                <button onClick={() => setMode('forecast')} className={`px-3 py-1 text-sm font-medium rounded-md ${mode === 'forecast' ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-600'}`}>Forecast</button>
+                <button 
+                    onClick={() => setMode('simulation')} 
+                    className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${mode === 'simulation' ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-600'}`}
+                    disabled={isLoading}
+                >
+                    Simulation
+                </button>
+                <button 
+                    onClick={() => setMode('forecast')} 
+                    className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${mode === 'forecast' ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-600'}`}
+                    disabled={isLoading}
+                >
+                    Forecast
+                </button>
              </div>
              {mode === 'forecast' && (
                 <>
@@ -57,21 +69,23 @@ const App: React.FC = () => {
                         type="date"
                         value={forecastDate}
                         onChange={(e) => setForecastDate(e.target.value)}
-                        className="px-2 py-1.5 bg-gray-700 border border-gray-600 rounded-md text-sm focus:ring-blue-500 focus:border-blue-500"
+                        className="px-2 py-1.5 bg-gray-700 border border-gray-600 rounded-md text-sm focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-800 disabled:cursor-not-allowed"
+                        disabled={isLoading}
                     />
                     <input 
                         type="text"
-                        placeholder="e.g., Chicago, IL"
+                        placeholder="e.g., Moscow, Russia"
                         value={forecastLocation}
                         onChange={(e) => setForecastLocation(e.target.value)}
-                        className="px-2 py-1.5 bg-gray-700 border border-gray-600 rounded-md text-sm w-36 focus:ring-blue-500 focus:border-blue-500"
+                        className="px-2 py-1.5 bg-gray-700 border border-gray-600 rounded-md text-sm w-36 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-800 disabled:cursor-not-allowed"
+                        disabled={isLoading}
                     />
                 </>
              )}
             <button
                 onClick={handleGenerateData}
                 disabled={isGenerateDisabled}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-blue-500 disabled:bg-blue-800 disabled:cursor-not-allowed"
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-blue-500 disabled:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed"
             >
                 {isLoading ? (
                 <>
@@ -100,7 +114,7 @@ const App: React.FC = () => {
               <SnowflakeIcon className="h-16 w-16 text-gray-600 mx-auto mb-4" />
               <h2 className="text-3xl font-bold text-white mb-2">Welcome to Cold Air Explorer</h2>
               <p className="text-gray-400 mb-6">
-                Use the controls in the header to get started. Select a mode, then click "Simulate New Outbreak" or "Generate Forecast" to visualize a scientifically plausible cold air event over North America using generative AI.
+                Use the controls in the header to get started. Select a mode, then click "Simulate New Outbreak" or "Generate Forecast" to visualize a scientifically plausible cold air event using generative AI.
               </p>
             </div>
           </div>
@@ -119,7 +133,7 @@ const App: React.FC = () => {
               <Dashboard data={outbreakData.dashboardData} />
             </div>
             <div className="lg:col-span-2 min-h-[400px] lg:min-h-[600px]">
-              <NorthAmericaMap 
+              <WorldMap 
                 mapData={outbreakData.mapData} 
                 activeLayer={activeLayer}
                 onLayerChange={setActiveLayer}

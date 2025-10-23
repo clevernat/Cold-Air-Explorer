@@ -18,8 +18,8 @@ const responseSchema = {
       items: {
         type: Type.OBJECT,
         properties: {
-          lat: { type: Type.NUMBER, description: "Latitude, between 25 and 60." },
-          lon: { type: Type.NUMBER, description: "Longitude, between -125 and -65." },
+          lat: { type: Type.NUMBER, description: "Latitude, between -60 and 75." },
+          lon: { type: Type.NUMBER, description: "Longitude, between -180 and 180." },
           temp: { type: Type.NUMBER, description: "Temperature in Celsius, between -40 and 5." },
           pressure: { type: Type.NUMBER, description: "Sea level pressure in hPa, between 1010 and 1050." },
           windSpeed: { type: Type.NUMBER, description: "Wind speed in km/h, between 10 and 80." },
@@ -32,7 +32,7 @@ const responseSchema = {
       type: Type.OBJECT,
       description: "Data for the dashboard widgets.",
       properties: {
-        eventName: { type: Type.STRING, description: "A creative name for the cold air outbreak event, e.g., 'Polar Vortex Intrusion of Winter 2024'." },
+        eventName: { type: Type.STRING, description: "A creative name for the cold air outbreak event, e.g., 'Siberian Express of Winter 2024'." },
         eventDate: { type: Type.STRING, description: "The simulated date of the event in 'Month DD, YYYY' format." },
         maxExtent: { type: Type.NUMBER, description: "Maximum geospatial extent of the outbreak in square kilometers." },
         minTemperature: { type: Type.NUMBER, description: "The lowest temperature recorded during the event in Celsius." },
@@ -95,7 +95,7 @@ const generateData = async (prompt: string): Promise<OutbreakData> => {
 
 
 export const generateOutbreakData = async (): Promise<OutbreakData> => {
-  const prompt = "Generate a dataset simulating a significant cold air outbreak over North America. The data should be scientifically plausible, reflecting typical patterns of such an event: a high-pressure system moving south from the arctic, bringing very cold temperatures. The core of the cold air should be centered over the US Midwest or Great Plains. Ensure the provided data points cover a wide area of the US and Canada.";
+  const prompt = "Generate a dataset simulating a significant cold air outbreak over a major continental landmass (e.g., North America, Europe, or Asia). The data should be scientifically plausible, reflecting typical patterns of such an event: a high-pressure system moving south from the arctic, bringing very cold temperatures. The core of the cold air should be centered over a plausible region for such an event. Ensure the provided data points cover a wide area of the affected continent.";
   return generateData(prompt);
 };
 
@@ -103,6 +103,6 @@ export const generateForecastData = async (date: string, location: string): Prom
   if (!date || !location) {
     throw new Error("Date and location are required for a forecast.");
   }
-  const prompt = `Generate a plausible forecast for a potential cold air outbreak centered around ${location} for the date ${date}. The data should reflect typical meteorological patterns leading to such an event. The core of the cold air should be focused near the specified location, but the data points should cover a wide area of the surrounding region in the US and Canada. The forecast should be scientifically grounded.`;
+  const prompt = `Generate a plausible forecast for a potential cold air outbreak centered around ${location} for the date ${date}. The data should reflect typical meteorological patterns leading to such an event. The core of the cold air should be focused near the specified location, but the data points should cover a wide area of the surrounding region. The forecast should be scientifically grounded.`;
   return generateData(prompt);
 };

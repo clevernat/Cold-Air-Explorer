@@ -1,18 +1,18 @@
 # Cold Air Explorer
 
-Cold Air Explorer is a web application that visualizes simulated and forecasted Cold Air Outbreaks over North America. It leverages the power of Google's Gemini generative AI to create scientifically plausible meteorological datasets on demand, which are then rendered as an interactive map and a detailed dashboard.
+Cold Air Explorer is a web application that visualizes simulated and forecasted Cold Air Outbreaks anywhere in the world. It leverages the power of Google's Gemini generative AI to create scientifically plausible meteorological datasets on demand, which are then rendered as an interactive world map and a detailed dashboard.
 
 ## Features
 
--   **AI-Powered Data Generation**: Generates complex weather data using the Gemini API.
+-   **AI-Powered Data Generation**: Generates complex weather data using the Gemini API for any major continental landmass.
 -   **Two Operational Modes**:
     -   **Simulation Mode**: Creates a plausible historical cold air outbreak event.
     -   **Forecast Mode**: Generates a potential future event based on a user-provided date and location.
--   **Interactive Map Visualization**:
-    -   Displays outbreak data points over a map of North America using D3.js.
-    -   Supports smooth zooming and panning to explore specific regions.
-    -   Allows users to save their current map view (zoom, pan, active layer) to `localStorage` and load it back later.
--   **Multiple Data Layers**: Users can toggle between different meteorological views on the map:
+-   **Interactive Tiled Map Visualization**:
+    -   Displays outbreak data over a dynamic, tiled world map using **Leaflet.js**.
+    -   **Dual Map Views**: Switch between a dark vector map and a high-resolution **satellite imagery** layer.
+    -   Supports smooth zooming and panning to explore specific regions in detail.
+-   **Multiple Data Layers**: Users can toggle between different meteorological views overlaid on the map:
     -   **Temperature**: Shows individual data points colored by temperature.
     -   **Pressure**: Renders a contour plot (isobars) of the pressure system.
     -   **Wind**: Displays a heatmap of wind speed.
@@ -26,21 +26,21 @@ Cold Air Explorer is a web application that visualizes simulated and forecasted 
 1.  **Select a Mode**: Upon loading, you can choose between `Simulation` and `Forecast` mode in the header.
 2.  **Generate Data**:
     -   In **Simulation Mode**, simply click the "Simulate New Outbreak" button. The AI will generate a complete dataset for a hypothetical event.
-    -   In **Forecast Mode**, enter a future date and a location (e.g., "Denver, CO") and click "Generate Forecast".
+    -   In **Forecast Mode**, enter a future date and a location (e.g., "Moscow, Russia") and click "Generate Forecast".
 3.  **Explore the Map**:
-    -   Use your mouse wheel to **zoom** in and out.
+    -   Use your mouse wheel or the +/- buttons to **zoom** in and out. When zoomed in, the satellite view will provide detailed imagery.
     -   Click and drag to **pan** across the map.
-    -   Use the toggle buttons at the top-right of the map to switch between `Temperature`, `Pressure`, and `Wind` layers.
+    -   Use the **layer control** at the top-right of the map to switch between the `Map` and `Satellite` base layers.
+    -   Use the **data layer toggles** to switch between `Temperature`, `Pressure`, and `Wind` overlays.
     -   In the Temperature layer, hover over individual points to see a detailed tooltip.
-4.  **Save Your View**:
-    -   Once you have a map view you'd like to keep, click the "Save View" button in the header.
-    -   To return to this view later, click the "Load View" button.
-5.  **Analyze the Dashboard**:
+4.  **Analyze the Dashboard**:
     -   On the left, the dashboard provides a summary of the generated event, including charts that provide historical context.
 
 ## Technical Stack
 
--   **Frontend**: React, TypeScript, D3.js, Recharts
+-   **Frontend**: React, TypeScript
+-   **Mapping**: Leaflet.js
+-   **Data Visualization**: D3.js (for overlays), Recharts (for charts)
 -   **Styling**: Tailwind CSS
 -   **AI Model**: Google Gemini (`@google/genai`)
 
@@ -57,7 +57,7 @@ Cold Air Explorer is a web application that visualizes simulated and forecasted 
 │
 ├── components/
 │   ├── Dashboard.tsx       # Component for all dashboard charts and stats
-│   ├── NorthAmericaMap.tsx # The interactive D3.js map component
+│   ├── WorldMap.tsx        # The interactive Leaflet/D3.js map component
 │   └── icons.tsx           # SVG icon components
 │
 └── services/
