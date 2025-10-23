@@ -5,18 +5,17 @@ import type { DashboardData } from '../types';
 
 interface DashboardProps {
   data: DashboardData;
+  activeLayer: 'temperature' | 'pressure' | 'wind';
 }
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
+    const { name, value, unit } = payload[0];
+    const formattedLabel = name === 'Events' ? `${label}: ${value}` : `${label}: ${value}${unit}`;
+
     return (
-      <div className="bg-gray-700 p-2 border border-gray-600 rounded">
-        <p className="label">{`${label}`}</p>
-        {payload.map((pld: any, index: number) => (
-          <p key={index} style={{ color: pld.color }}>
-            {`${pld.name}: ${pld.value}${pld.unit || ''}`}
-          </p>
-        ))}
+      <div className="bg-gray-700 p-2 border border-gray-600 rounded backdrop-blur-sm bg-opacity-70">
+        <p className="label font-semibold">{formattedLabel}</p>
       </div>
     );
   }
@@ -24,13 +23,49 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 
-const Dashboard: React.FC<DashboardProps> = ({ data }) => {
+const Dashboard: React.FC<DashboardProps> = ({ data, activeLayer }) => {
+
+    const layerDisplayConfig = {
+        temperature: {
+            statLabel: 'Min Temperature',
+            statValue: `${data.minTemperature}°C`,
+            statColor: 'text-blue-300',
+            chartLabel: 'Severity Trend (Avg. Min Temp)',
+            chartData: data.severityTrend,
+            chartDataKey: 'avgMinTemp',
+            chartUnit: '°C',
+            chartColor: '#38B2AC'
+        },
+        pressure: {
+            statLabel: 'Max Pressure',
+            statValue: `${data.maxPressure} hPa`,
+            statColor: 'text-orange-300',
+            chartLabel: 'Pressure Trend (Avg. Max Pressure)',
+            chartData: data.pressureTrend,
+            chartDataKey: 'avgMaxPressure',
+            chartUnit: ' hPa',
+            chartColor: '#E16462'
+        },
+        wind: {
+            statLabel: 'Max Wind Speed',
+            statValue: `${data.maxWindSpeed} km/h`,
+            statColor: 'text-yellow-300',
+            chartLabel: 'Wind Trend (Avg. Max Wind)',
+            chartData: data.windTrend,
+            chartDataKey: 'avgMaxWind',
+            chartUnit: ' km/h',
+            chartColor: '#F68F44'
+        }
+    };
+
+    const config = layerDisplayConfig[activeLayer];
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
         <div className="bg-gray-800 p-4 rounded-lg">
-          <h3 className="text-sm text-gray-400">Min Temperature</h3>
-          <p className="text-2xl font-bold text-blue-300">{data.minTemperature}°C</p>
+          <h3 className="text-sm text-gray-400">{config.statLabel}</h3>
+          <p className={`text-2xl font-bold ${config.statColor}`}>{config.statValue}</p>
         </div>
         <div className="bg-gray-800 p-4 rounded-lg">
           <h3 className="text-sm text-gray-400">Event Name</h3>
@@ -59,14 +94,14 @@ const Dashboard: React.FC<DashboardProps> = ({ data }) => {
       </div>
 
       <div className="bg-gray-800 p-4 rounded-lg">
-        <h3 className="font-semibold mb-4 text-gray-300">Severity Trend (Avg. Min Temp)</h3>
+        <h3 className="font-semibold mb-4 text-gray-300">{config.chartLabel}</h3>
         <ResponsiveContainer width="100%" height={200}>
-          <LineChart data={data.severityTrend} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+          <LineChart data={config.chartData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#4A5568" />
             <XAxis dataKey="year" tick={{ fill: '#A0AEC0' }} />
-            <YAxis tick={{ fill: '#A0AEC0' }} unit="°C" />
+            <YAxis tick={{ fill: '#A0AEC0' }} unit={config.chartUnit} />
             <Tooltip content={<CustomTooltip />} cursor={{stroke: '#4A5568', strokeWidth: 1}}/>
-            <Line type="monotone" dataKey="avgMinTemp" stroke="#38B2AC" strokeWidth={2} name="Avg. Min Temp" unit="°C" />
+            <Line type="monotone" dataKey={config.chartDataKey} stroke={config.chartColor} strokeWidth={2} name={config.chartLabel} unit={config.chartUnit} />
           </LineChart>
         </ResponsiveContainer>
       </div>

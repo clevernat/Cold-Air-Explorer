@@ -1,3 +1,4 @@
+
 import { GoogleGenAI, Type } from "@google/genai";
 import type { OutbreakData } from '../types';
 
@@ -36,6 +37,8 @@ const responseSchema = {
         eventDate: { type: Type.STRING, description: "The simulated date of the event in 'Month DD, YYYY' format." },
         maxExtent: { type: Type.NUMBER, description: "Maximum geospatial extent of the outbreak in square kilometers." },
         minTemperature: { type: Type.NUMBER, description: "The lowest temperature recorded during the event in Celsius." },
+        maxPressure: { type: Type.NUMBER, description: "The highest pressure recorded during the event in hPa." },
+        maxWindSpeed: { type: Type.NUMBER, description: "The highest wind speed recorded during the event in km/h." },
         monthlyFrequency: {
           type: Type.ARRAY,
           description: "Simulated count of similar events per month over the last year.",
@@ -60,8 +63,32 @@ const responseSchema = {
             required: ["year", "avgMinTemp"],
           },
         },
+        pressureTrend: {
+          type: Type.ARRAY,
+          description: "Simulated trend of average maximum pressure for similar events over the last 5 years.",
+          items: {
+            type: Type.OBJECT,
+            properties: {
+              year: { type: Type.NUMBER, description: "Year." },
+              avgMaxPressure: { type: Type.NUMBER, description: "Average maximum pressure in hPa." },
+            },
+            required: ["year", "avgMaxPressure"],
+          },
+        },
+        windTrend: {
+          type: Type.ARRAY,
+          description: "Simulated trend of average maximum wind speed for similar events over the last 5 years.",
+          items: {
+            type: Type.OBJECT,
+            properties: {
+              year: { type: Type.NUMBER, description: "Year." },
+              avgMaxWind: { type: Type.NUMBER, description: "Average maximum wind speed in km/h." },
+            },
+            required: ["year", "avgMaxWind"],
+          },
+        },
       },
-      required: ["eventName", "eventDate", "maxExtent", "minTemperature", "monthlyFrequency", "severityTrend"],
+      required: ["eventName", "eventDate", "maxExtent", "minTemperature", "maxPressure", "maxWindSpeed", "monthlyFrequency", "severityTrend", "pressureTrend", "windTrend"],
     },
   },
   required: ["mapData", "dashboardData"],

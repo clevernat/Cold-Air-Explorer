@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useMemo } from 'react';
+import React, { useRef, useEffect, useState, useMemo, forwardRef } from 'react';
 import * as d3 from 'd3';
 import type { MapPoint } from '../types';
 
@@ -39,7 +39,7 @@ const layerConfig = {
     }
 };
 
-const WorldMap: React.FC<WorldMapProps> = ({ mapData, activeLayer, onLayerChange }) => {
+const WorldMap = forwardRef<HTMLDivElement, WorldMapProps>(({ mapData, activeLayer, onLayerChange }, ref) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const svgOverlayRef = useRef<SVGSVGElement | null>(null);
@@ -174,7 +174,7 @@ const WorldMap: React.FC<WorldMapProps> = ({ mapData, activeLayer, onLayerChange
   const currentConfig = layerConfig[activeLayer];
 
   return (
-    <div className="relative w-full h-full bg-gray-800 rounded-lg overflow-hidden">
+    <div ref={ref} className="relative w-full h-full bg-gray-800 rounded-lg overflow-hidden">
         <style>{`
            .leaflet-control-layers { background: #1F2937; border-radius: 8px; border: 1px solid #4B5563; }
            .leaflet-control-layers-base label { color: #E5E7EB; font-weight: normal; }
@@ -218,6 +218,6 @@ const WorldMap: React.FC<WorldMapProps> = ({ mapData, activeLayer, onLayerChange
         </div>
     </div>
   );
-};
+});
 
 export default WorldMap;

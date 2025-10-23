@@ -18,13 +18,27 @@ export interface SeverityTrend {
   avgMinTemp: number;
 }
 
+export interface PressureTrend {
+  year: number;
+  avgMaxPressure: number;
+}
+
+export interface WindTrend {
+  year: number;
+  avgMaxWind: number;
+}
+
 export interface DashboardData {
   eventName: string;
   eventDate: string;
   maxExtent: number; // in sq km
   minTemperature: number; // in Celsius
+  maxPressure: number; // in hPa
+  maxWindSpeed: number; // in km/h
   monthlyFrequency: MonthlyFrequency[];
   severityTrend: SeverityTrend[];
+  pressureTrend: PressureTrend[];
+  windTrend: WindTrend[];
 }
 
 export interface OutbreakData {
