@@ -1,9 +1,9 @@
-
 import React, { useState, useCallback, useMemo, useRef } from 'react';
 import { generateOutbreakData, generateForecastData } from './services/geminiService';
 import type { OutbreakData } from './types';
 import WorldMap from './components/WorldMap';
 import Dashboard from './components/Dashboard';
+import Report from './components/Report';
 import { SnowflakeIcon, LoadingSpinner, CameraIcon } from './components/icons';
 import html2canvas from 'html2canvas';
 
@@ -192,21 +192,26 @@ const App: React.FC = () => {
         )}
 
         {outbreakData && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-1">
-              <Dashboard 
-                data={outbreakData.dashboardData}
-                activeLayer={activeLayer} 
-              />
+          <div className="flex flex-col gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-1">
+                <Dashboard 
+                  data={outbreakData.dashboardData}
+                  activeLayer={activeLayer} 
+                />
+              </div>
+              <div className="lg:col-span-2 min-h-[400px] lg:min-h-[600px]">
+                <WorldMap 
+                  ref={mapComponentRef}
+                  mapData={outbreakData.mapData} 
+                  activeLayer={activeLayer}
+                  onLayerChange={setActiveLayer}
+                />
+              </div>
             </div>
-            <div className="lg:col-span-2 min-h-[400px] lg:min-h-[600px]">
-              <WorldMap 
-                ref={mapComponentRef}
-                mapData={outbreakData.mapData} 
-                activeLayer={activeLayer}
-                onLayerChange={setActiveLayer}
-              />
-            </div>
+            {outbreakData.dashboardData.report && (
+              <Report markdownContent={outbreakData.dashboardData.report} />
+            )}
           </div>
         )}
       </main>

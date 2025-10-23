@@ -1,4 +1,3 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 import type { OutbreakData } from '../types';
 
@@ -87,8 +86,12 @@ const responseSchema = {
             required: ["year", "avgMaxWind"],
           },
         },
+        report: {
+            type: Type.STRING,
+            description: "A comprehensive meteorological analysis report of the event in Markdown format. The report should be well-structured with a title (as a heading), a summary paragraph, and sections for 'Key Metrics', 'Geospatial Extent and Affected Areas', and 'Historical Context and Trends'. The tone should be formal and informative."
+        }
       },
-      required: ["eventName", "eventDate", "maxExtent", "minTemperature", "maxPressure", "maxWindSpeed", "monthlyFrequency", "severityTrend", "pressureTrend", "windTrend"],
+      required: ["eventName", "eventDate", "maxExtent", "minTemperature", "maxPressure", "maxWindSpeed", "monthlyFrequency", "severityTrend", "pressureTrend", "windTrend", "report"],
     },
   },
   required: ["mapData", "dashboardData"],
@@ -109,8 +112,8 @@ const generateData = async (prompt: string): Promise<OutbreakData> => {
     const data = JSON.parse(jsonText);
     
     // Basic validation to ensure the parsed data matches the expected structure.
-    if (!data.mapData || !data.dashboardData) {
-        throw new Error("Generated data is missing required fields.");
+    if (!data.mapData || !data.dashboardData || !data.dashboardData.report) {
+        throw new Error("Generated data is missing required fields, including the analysis report.");
     }
 
     return data as OutbreakData;

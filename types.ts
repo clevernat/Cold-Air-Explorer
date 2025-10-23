@@ -1,4 +1,3 @@
-
 export interface MapPoint {
   lat: number;
   lon: number;
@@ -39,6 +38,7 @@ export interface DashboardData {
   severityTrend: SeverityTrend[];
   pressureTrend: PressureTrend[];
   windTrend: WindTrend[];
+  report: string;
 }
 
 export interface OutbreakData {
